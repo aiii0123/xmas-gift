@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>🎄 聖誕交換禮物</title>
+<style>
+body {
+    font-family: sans-serif;
+    background: #f4f6f8;
+    text-align: center;
+    padding: 30px;
+}
+.box {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 420px;
+    margin: auto;
+}
+input, button {
+    padding: 10px;
+    margin: 5px;
+    font-size: 16px;
+}
+#result {
+    margin-top: 20px;
+    font-size: 18px;
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+<h2>🎁 聖誕交換禮物</h2>
+
+<p>請輸入你的名字與通關碼</p>
+<input type="text" id="nameInput" placeholder="名字"><br>
+<input type="password" id="codeInput" placeholder="通關碼"><br>
+<button onclick="showResult()">查看結果</button>
+
+<div id="result"></div>
+</div>
+
+<script>
+/* ===== 你要設定的資料 ===== */
+
+const NAMES = [
+    "黃詩艾",
+    "孫昕",
+    "黃恆奕",
+    "老皮",
+	"暈針",
+	"藍莓",
+];
+
+const ACCESS_CODES = {
+    "黃詩艾": "A93K",
+    "孫昕": "L7Q2",
+    "黃恆奕": "Z8M1",
+    "老皮": "P4X9",
+    "暈針": "H39D",
+    "藍莓": "Q7N4"
+
+};
+
+const SECRET_SEED = "Xmas2025_AiOnly";
+
+/* ========================= */
+
+function seededRandom(seed) {
+    let x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+}
+
+function stringToSeed(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        hash = (hash * 31 + str.charCodeAt(i)) >>> 0;
+    }
+    return hash;
+}
+
+function shuffleWithSeed(array, seedStr) {
+    const seed = stringToSeed(seedStr);
+    let arr = [...array];
+    let currentSeed = seed;
+
+    for (let i = arr.length - 1; i > 0; i--) {
+        currentSeed += i;
+        const j = Math.floor(seededRandom(currentSeed) * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
+function generateResults() {
+    let receivers;
+    do {
+        receivers = shuffleWithSeed(NAMES, SECRET_SEED);
+    } while (NAMES.some((n, i) => n === receivers[i]));
+
+    const map = {};
+    NAMES.forEach((n, i) => map[n] = receivers[i]);
+    return map;
+}
+
+const RESULTS = generateResults();
+
+function showResult() {
+    const name = document.getElementById("nameInput").value.trim();
+    const code = document.getElementById("codeInput").value.trim();
+    const resultDiv = document.getElementById("result");
+
+    if (!ACCESS_CODES[name]) {
+        resultDiv.innerText = "❌ 名單中沒有這個名字";
+        return;
+    }
+
+    if (ACCESS_CODES[name] !== code) {
+        resultDiv.innerText = "❌ 通關碼錯誤";
+        return;
+    }
+
+    resultDiv.innerHTML = `
+        🎁 <strong>${name}</strong><br><br>
+        你要送禮物給：<br>
+        🎄 <strong>${RESULTS[name]}</strong>
+    `;
+}
+</script>
+
+</body>
+</html>
