@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -42,68 +43,40 @@ input, button {
 </div>
 
 <script>
+/* ===== 名單 ===== */
 
 const NAMES = [
     "黃詩艾",
     "孫昕",
     "黃恆奕",
     "老皮",
-	"暈針",
-	"藍莓",
+    "暈針",
+    "藍莓"
 ];
 
-const ACCESS_CODES = {
-    "黃詩艾": "A93K",
-    "孫昕": "L7Q2",
-    "黃恆奕": "Z8M1",
-    "老皮": "P4X9",
-    "暈針": "H39D",
-    "藍莓": "Q7N4"
+/* ===== 新通關碼（已更換）===== */
 
+const ACCESS_CODES = {
+    "黃詩艾": "F8Q2",
+    "孫昕":   "M7A9",
+    "黃恆奕": "K4Z6",
+    "老皮":   "R9X3",
+    "暈針":   "H5L8",
+    "藍莓":   "Q2D7"
 };
 
-const SECRET_SEED = "Xmas2025_Ai_Round2";
+/* ===== 已重新抽好的結果（不顯示於對話）===== */
+
+const RESULTS = {
+    "黃詩艾": "藍莓",
+    "藍莓": "孫昕",
+    "孫昕": "老皮",
+    "老皮": "暈針",
+    "暈針": "黃恆奕",
+    "黃恆奕": "黃詩艾"
+};
 
 /* ========================= */
-
-function seededRandom(seed) {
-    let x = Math.sin(seed) * 10000;
-    return x - Math.floor(x);
-}
-
-function stringToSeed(str) {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-        hash = (hash * 31 + str.charCodeAt(i)) >>> 0;
-    }
-    return hash;
-}
-
-function shuffleWithSeed(array, seedStr) {
-    const seed = stringToSeed(seedStr);
-    let arr = [...array];
-    let currentSeed = seed;
-
-    for (let i = arr.length - 1; i > 0; i--) {
-        currentSeed += i;
-        const j = Math.floor(seededRandom(currentSeed) * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-}
-
-function generateResults() {
-    let receivers;
-    do {
-        receivers = shuffleWithSeed(NAMES, SECRET_SEED);
-    } while (NAMES.some((n, i) => n === receivers[i]));
-
-    const map = {};
-    NAMES.forEach((n, i) => map[n] = receivers[i]);
-    return map;
-}
-
-const RESULTS = generateResults();
 
 function showResult() {
     const name = document.getElementById("nameInput").value.trim();
@@ -129,6 +102,4 @@ function showResult() {
 </script>
 
 </body>
-
 </html>
-
