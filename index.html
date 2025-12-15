@@ -48,20 +48,20 @@ const NAMES = [
     "孫昕",
     "黃恆奕",
     "老皮",
-	"暈針",
-	"藍莓",
+    "暈針",
+    "藍莓"
 ];
 
 const ACCESS_CODES = {
-  "黃詩艾": "F8Q2",
-    "孫昕":   "M7A9",
+    "黃詩艾": "F8Q2",
+    "孫昕": "M7A9",
     "黃恆奕": "K4Z6",
-    "老皮":   "R9X3",
-    "暈針":   "H5L8",
-    "藍莓":   "Q2D7"
-
+    "老皮": "R9X3",
+    "暈針": "H5L8",
+    "藍莓": "Q2D7"
 };
 
+/* ===== 固定送禮結果（已修改黃恆奕與暈針） ===== */
 const RESULTS = {
     "黃詩艾": "老皮",
     "孫昕": "暈針",
@@ -70,46 +70,6 @@ const RESULTS = {
     "暈針": "黃詩艾",
     "藍莓": "黃恆奕"
 };
-/* ========================= */
-
-function seededRandom(seed) {
-    let x = Math.sin(seed) * 10000;
-    return x - Math.floor(x);
-}
-
-function stringToSeed(str) {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-        hash = (hash * 31 + str.charCodeAt(i)) >>> 0;
-    }
-    return hash;
-}
-
-function shuffleWithSeed(array, seedStr) {
-    const seed = stringToSeed(seedStr);
-    let arr = [...array];
-    let currentSeed = seed;
-
-    for (let i = arr.length - 1; i > 0; i--) {
-        currentSeed += i;
-        const j = Math.floor(seededRandom(currentSeed) * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-}
-
-function generateResults() {
-    let receivers;
-    do {
-        receivers = shuffleWithSeed(NAMES, SECRET_SEED);
-    } while (NAMES.some((n, i) => n === receivers[i]));
-
-    const map = {};
-    NAMES.forEach((n, i) => map[n] = receivers[i]);
-    return map;
-}
-
-const RESULTS = generateResults();
 
 function showResult() {
     const name = document.getElementById("nameInput").value.trim();
